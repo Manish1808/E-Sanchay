@@ -57,7 +57,7 @@ const Assessment = () => {
         setUser(updatedUser);
       }
   
-      toast.success(`${user.points} Score updated successfully!`);
+      toast.success(`Score updated successfully!`);
     } catch (error) {
       toast.error("Failed to update points. Try again.");
       console.log(error);

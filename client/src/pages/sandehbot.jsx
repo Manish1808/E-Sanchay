@@ -7,18 +7,20 @@ const SandehBot = () => {
   ]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
-  const [selectedLanguage, setSelectedLanguage] = useState("english"); // Default language: English
+  const [selectedLanguage, setSelectedLanguage] = useState("english"); // Default: English
 
   // Function to update the initial message when language changes
   const handleLanguageChange = (e) => {
     const newLanguage = e.target.value;
     setSelectedLanguage(newLanguage);
 
-    // Update the first message based on the selected language
-    const updatedMessage =
-      newLanguage === "hindi"
-        ? "नमस्ते! मैं आपकी कैसे मदद कर सकता हूँ?"
-        : "Hello! How can I help you today?";
+    let updatedMessage = "Hello! How can I help you today?"; // Default English
+
+    if (newLanguage === "hindi") {
+      updatedMessage = "नमस्ते! मैं आपकी कैसे मदद कर सकता हूँ?";
+    } else if (newLanguage === "telugu") {
+      updatedMessage = "హలో! నేను మీకు ఎలా సహాయపడగలను?";
+    }
 
     setMessages([{ text: updatedMessage, sender: "bot" }]);
   };
@@ -55,7 +57,7 @@ const SandehBot = () => {
   };
 
   return (
-    <div className="flex items-center justify-center h-screen bg-gray-900 p-5">
+    <div className="flex items-center justify-center h-screen bg-black-900 p-5">
     
       <div className="flex w-[900px] h-[600px] bg-gray-800 text-white shadow-lg rounded-lg overflow-hidden border border-gray-700">
         
@@ -76,6 +78,7 @@ const SandehBot = () => {
             >
               <option value="english">English</option>
               <option value="hindi">हिंदी (Hindi)</option>
+              <option value="telugu">తెలుగు (Telugu)</option>
             </select>
           </div>
 
