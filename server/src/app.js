@@ -24,10 +24,13 @@ app.use(cors({
 //import routes
 import userAuthRoute from "./routes/userAuth.route.js";
 import chatRoute from "./routes/chat.route.js";
-
+import agentRoute from "./routes/sanchayagent.route.js";
+import investroute from "./routes/smartinvest.route.js";
 //use routes
 app.use("/api/v1/auth",userAuthRoute);
 app.use("/api/v1/chat",chatRoute);
+app.use("/api/v1/sancheyagent",agentRoute);
+app.use("/api/v1/smartinvest",investroute);
 
 
 

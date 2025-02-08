@@ -74,9 +74,42 @@ const loginUser = AsyncHandler(async (req, res) => {
 });
 
 
+const updatepoints = AsyncHandler(async (req, res) => {
+    const { points, userid } = req.body;
+
+    if (points === undefined || userid === undefined) {
+        throw new ApiError(400, "All fields are mandatory");
+    }
+
+    if (isNaN(points)) {
+        throw new ApiError(400, "Points must be a number");
+    }
+
+    const existingUser = await User.findById(userid);
+    
+    if (!existingUser) {
+        throw new ApiError(404, "User not found");
+    }
+
+    // Correct points update logic
+    existingUser.points += points;
+
+    await existingUser.save();
+
+    console.log(`User: ${existingUser._id} points updated successfully`);
+
+    res.status(200).json({
+        success: true,
+        message: "User points updated successfully",
+        data: existingUser
+    });
+});
+
+
 
 
 export {
     registerUser,
-    loginUser
+    loginUser,
+    updatepoints
 }
