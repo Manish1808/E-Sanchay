@@ -34,7 +34,6 @@ const Signup = () => {
         params: { number: mobile },
       };
       const response = await axios.request(options);
-      console.log(response.data);
       if (response.data.valid && response.data.country_code === "IN") {
         return true;
       } else {
