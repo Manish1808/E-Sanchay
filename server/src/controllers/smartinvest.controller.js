@@ -4,8 +4,8 @@ import ApiError from "../utils/ApiError.js";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
 const invest = AsyncHandler(async (req, res) => {
-    const { income,riskLevel,language} = req.body;
-    console.log("investment running...")
+    const { income, riskLevel, language } = req.body;
+    console.log("investment running... " + income + " " + riskLevel + " " + language);
     if (!income || isNaN(income) || income <= 0) {
         throw new ApiError(400, "Please enter a valid monthly income");
     }
@@ -21,7 +21,19 @@ const invest = AsyncHandler(async (req, res) => {
     };
 
     try {
-        let prompt = `I have a monthly income of $${income} and I am looking for investment advice. I am willing to take a ${riskLevel} risk. use 60-20-20 rule for dividing the money for needs,necessities,savings and 50 30 20 rule for investing savings answer in points and answer in ${language} language no preamble`;
+        let prompt = `I have a monthly income of ₹${income} and I am looking for investment advice. 
+I am willing to take a ${riskLevel} risk. 
+
+Please divide my income using the 60-20-20 rule:
+- 60% for needs (necessities)
+- 20% for wants (discretionary expenses)
+- 20% for savings and investments
+
+Allocate the savings portion appropriately based on my risk level:
+- Provide suitable investment strategies considering my risk preference.
+
+Respond concisely in ${language}, using Indian Rupee (₹) as the currency format. Do not include any preamble.`;
+
         const chatSession = model.startChat({ generationConfig });
         const result = await chatSession.sendMessage(prompt);
 
@@ -33,7 +45,7 @@ const invest = AsyncHandler(async (req, res) => {
             message: result.response.text(),
         }, "Response generated successfully"));
     } catch (error) {
-        throw new ApiError(500, "Error generating response "+error);
+        throw new ApiError(500, "Error generating response " + error);
     }
 });
 

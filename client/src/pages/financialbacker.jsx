@@ -20,14 +20,16 @@ const FinancialBacker = () => {
 
   useEffect(() => {
     const fetchJobListings = async () => {
-      const jobs = [
-        { title: "Delivery Driver", description: "Deliver packages across Hyderabad.", salary: 15000, link: "#" },
-        { title: "Warehouse Worker", description: "Manage inventory and packaging.", salary: 12000, link: "#" },
-        { title: "Housekeeping Staff", description: "Hotel housekeeping staff required.", salary: 10000, link: "#" },
-        { title: "Construction Laborer", description: "Hiring for construction projects.", salary: 13000, link: "#" },
-      ];
-      setJobListings(jobs);
-    };
+  const jobs = [
+    { title: "Food Delivery Partner", description: "Deliver food across Hyderabad for Swiggy/Zomato.", salary: 12000, link: "#" },
+    { title: "Retail Store Assistant", description: "Assist customers and manage stock in a retail store.", salary: 10000, link: "#" },
+    { title: "Customer Support Executive", description: "Part-time customer service for an e-commerce company.", salary: 14000, link: "#" },
+    { title: "Online Tutor", description: "Teach students online in your preferred subject.", salary: 15000, link: "#" },
+    { title: "Data Entry Operator", description: "Work-from-home data entry tasks.", salary: 9000, link: "#" },
+    { title: "Hotel Receptionist", description: "Part-time receptionist at a city hotel.", salary: 13000, link: "#" },
+  ];
+  setJobListings(jobs);
+};
 
     const fetchInvestmentWorkshops = async () => {
       const workshops = [

@@ -30,7 +30,7 @@ const Signup = () => {
     try {
       const options = {
         method: "GET",
-        url: `https://apilayer.net/api/validate?access_key=d59aecd7a9dc082dc4902807f4c39258`,
+        url: `https://apilayer.net/api/validate?access_key=${import.meta.env.VITE_NUMERIFY_API}`,
         params: { number: mobile },
       };
       const response = await axios.request(options);
@@ -67,7 +67,7 @@ const Signup = () => {
 
     try {
       const response = await axios.post(
-        `http://localhost:8000/api/v1/auth/register`,
+        `${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/register`,
         userData
       );
       const user = response.data.data;

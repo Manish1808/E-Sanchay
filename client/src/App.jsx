@@ -3,7 +3,6 @@ import { ToastContainer, toast } from 'react-toastify';
 import { createBrowserRouter, RouterProvider, Route, Outlet } from "react-router-dom";
 import { AuthProvider } from './contexts/AuthContext.jsx';
 import "./assets/loader.css";
-import {BACKENDURL} from "./constants.jsx";
 import Navbar from './components/Navbar/navbar.jsx';
 import Signup from "./components/Auth/signup.jsx";
 import Login from "./components/Auth/login.jsx";

@@ -103,7 +103,7 @@ const summarizeExpenses = AsyncHandler(async (req, res) => {
     ${formattedExpenses}\n
     Analyze the spending patterns and provide insights on how the user can optimize their expenses and save more money.
     Provide specific suggestions and categorize spending trends if possible.
-    give the result in bullet points and in a concise manner.
+    give the result in a concise manner.
     `;
 
     try {

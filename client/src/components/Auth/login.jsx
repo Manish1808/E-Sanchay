@@ -26,7 +26,7 @@ const Login = () => {
 
         try {
             let response;
-            response = await axios.post(`http://localhost:8000/api/v1/auth/login`, userData);
+            response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/login`, userData);
             const user = response.data.data;
             localStorage.setItem("user", JSON.stringify(user));
             setUser(user);

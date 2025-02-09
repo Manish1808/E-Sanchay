@@ -1,84 +1,74 @@
 import React, { useState, useEffect } from "react";
 
 const Learn = () => {
-  const [selectedVideo, setSelectedVideo] = useState(
-    "https://drive.google.com/file/d/19liUZIj1VrPheuOboBTPE_Ln76fNcIcF/preview"
-  );
+  const [language, setLanguage] = useState("hindi");
+  const [selectedVideo, setSelectedVideo] = useState("");
   const [notes, setNotes] = useState([]);
   const [newNote, setNewNote] = useState("");
 
-  // Load notes from localStorage on component mount
+  const chapters = {
+    hindi: [
+      { title: "संयोजन की शक्ति", video: "https://drive.google.com/file/d/19liUZIj1VrPheuOboBTPE_Ln76fNcIcF/preview" },
+      { title: "स्मार्ट बिजनेस", video: "https://drive.google.com/file/d/183Lkyvg1u8LXcH0ZqFB3fm7Gil4n_MRw/preview" },
+      { title: "जैक मा की प्रेरणा", video: "https://drive.google.com/file/d/1Ap6ZaeuqgrWgq-LpnR7NS84WO1NPt8HY/preview" },
+      { title: "टर्म इंश्योरेंस क्या है", video: "https://drive.google.com/file/d/128fCjHoDvFurHuEEHV12v-RA5seI3zG2/preview" },
+      { title: "KFC संस्थापक की कहानी", video: "https://drive.google.com/file/d/1DDrrsORT1_lQdHdFCUla0vVZGzcE4QNg/preview" },
+    ],
+    telugu: [
+      { title: "జాక్ మా యొక్క ప్రేరణ", video: "https://drive.google.com/file/d/1MivF3a0HBUxFi1Muu9YiHLzgMhZCL3jP/preview" },
+      { title: "చాణక్య నీతులు", video: "https://drive.google.com/file/d/1tz1n_606lx5QZ2TgWUqVXim0q8HqpIOh/preview" },
+      { title: "పొదుపు విలువ", video: "https://drive.google.com/file/d/1sFkY9lohYrJTqKT0-3bMQ6LVoIZ63OCM/preview" },
+    ],
+  };
+
+  useEffect(() => {
+    setSelectedVideo(chapters[language][0].video);
+  }, [language]);
+
   useEffect(() => {
     const savedNotes = JSON.parse(localStorage.getItem("notes")) || [];
     setNotes(savedNotes);
   }, []);
 
-  // Save notes to localStorage whenever they change
   useEffect(() => {
     localStorage.setItem("notes", JSON.stringify(notes));
   }, [notes]);
 
-  // Function to add a new note
   const addNote = () => {
     if (newNote.trim() !== "") {
-      const updatedNotes = [...notes, newNote];
-      setNotes(updatedNotes);
-      setNewNote(""); // Clear input field after adding
+      setNotes([...notes, newNote]);
+      setNewNote("");
     }
   };
 
   return (
     <div className="flex min-h-screen bg-gray-900 text-gray-300 p-4">
-      {/* Sidebar for Chapters */}
       <div className="w-1/4 bg-gray-800 shadow-lg rounded-lg p-4">
-        <h2 className="text-lg font-bold mb-3 text-gray-100">Chapters</h2>
+        <div className="flex justify-between items-center mb-3">
+          <h2 className="text-lg font-bold text-gray-100">Chapters</h2>
+          <select
+            className="bg-gray-700 text-white p-1 rounded"
+            value={language}
+            onChange={(e) => setLanguage(e.target.value)}
+          >
+            <option value="hindi">Hindi</option>
+            <option value="telugu">Telugu</option>
+          </select>
+        </div>
         <ul>
-          <li
-            className="cursor-pointer hover:text-blue-400 py-2"
-            onClick={() =>
-              setSelectedVideo("https://drive.google.com/file/d/19liUZIj1VrPheuOboBTPE_Ln76fNcIcF/preview")
-            }
-          >
-            Chapter 1 - संयोजन की शक्ति
-          </li>
-          <li
-            className="cursor-pointer hover:text-blue-400 py-2"
-            onClick={() =>
-              setSelectedVideo("https://drive.google.com/file/d/183Lkyvg1u8LXcH0ZqFB3fm7Gil4n_MRw/preview")
-            }
-          >
-            Chapter 2 - स्मार्ट बिजनेस
-          </li>
-          <li
-            className="cursor-pointer hover:text-blue-400 py-2"
-            onClick={() =>
-              setSelectedVideo("https://drive.google.com/file/d/1Ap6ZaeuqgrWgq-LpnR7NS84WO1NPt8HY/preview")
-            }
-          >
-            Chapter 3 - जैक मा की प्रेरणा
-          </li>
-          <li
-            className="cursor-pointer hover:text-blue-400 py-2"
-            onClick={() =>
-              setSelectedVideo("https://drive.google.com/file/d/128fCjHoDvFurHuEEHV12v-RA5seI3zG2/preview")
-            }
-          >
-            Chapter 4 - टर्म इंश्योरेंस क्या है
-          </li>
-          <li
-            className="cursor-pointer hover:text-blue-400 py-2"
-            onClick={() =>
-              setSelectedVideo("https://drive.google.com/file/d/1DDrrsORT1_lQdHdFCUla0vVZGzcE4QNg/preview")
-            }
-          >
-            Chapter 5 - KFC संस्थापक की कहानी
-          </li>
+          {chapters[language].map((chapter, index) => (
+            <li
+              key={index}
+              className="cursor-pointer hover:text-blue-400 py-2"
+              onClick={() => setSelectedVideo(chapter.video)}
+            >
+              {chapter.title}
+            </li>
+          ))}
         </ul>
       </div>
 
-      {/* Main Content */}
       <div className="w-3/4 flex flex-col items-center">
-        {/* Video Player */}
         <iframe
           className="w-full h-[500px] rounded-lg shadow-lg border border-gray-700"
           src={selectedVideo}
@@ -86,11 +76,8 @@ const Learn = () => {
           allowFullScreen
         ></iframe>
 
-        {/* Notes Section */}
         <div className="w-full mt-4 bg-gray-800 p-4 rounded-lg shadow-lg">
           <h2 className="text-lg font-bold text-gray-100 mb-2">Notes</h2>
-
-          {/* Input for new note */}
           <div className="flex space-x-2">
             <input
               type="text"
@@ -106,8 +93,6 @@ const Learn = () => {
               Add
             </button>
           </div>
-
-          {/* Display Notes */}
           <ul className="mt-4 space-y-2">
             {notes.length > 0 ? (
               notes.map((note, index) => (
