@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
 import { AuthContext } from "../contexts/AuthContext.jsx";
 import { Bot, X } from "lucide-react";
+import ExpensePieChart from "./expensepiechart.jsx";
 
 const SanchayAgent = () => {
   const { user } = useContext(AuthContext);
@@ -9,6 +10,7 @@ const SanchayAgent = () => {
   const [title, setTitle] = useState("");
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
+  const [sloading, setsLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [summary, setSummary] = useState("");
   const [isSummaryModalOpen, setIsSummaryModalOpen] = useState(false);
@@ -54,7 +56,7 @@ const SanchayAgent = () => {
   };
 
   const summarizeExpenses = async () => {
-    setLoading(true);
+    setsLoading(true);
     try {
       const response = await axios.post(
         "http://localhost:8000/api/v1/sancheyagent/summarize",
@@ -66,7 +68,7 @@ const SanchayAgent = () => {
     } catch (error) {
       setSummary("Error summarizing expenses.");
     }
-    setLoading(false);
+    setsLoading(false);
   };
 
   const updateExpense = async () => {
@@ -131,10 +133,10 @@ const SanchayAgent = () => {
 
         <button
           onClick={summarizeExpenses}
-          disabled={loading}
+          disabled={sloading}
           className="flex items-center justify-center w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded mt-6"
         >
-          <Bot className="mr-2" size={20} /> {loading ? "Summarizing..." : "Summarize Expenses"}
+          <Bot className="mr-2" size={20} /> {sloading ? "Summarizing..." : "Summarize Expenses"}
         </button>
       </div>
 
@@ -142,6 +144,17 @@ const SanchayAgent = () => {
         {expenses.map((exp) => (
           <li key={exp._id} className="flex justify-between bg-gray-700 p-2 mt-2 rounded">
             <span>{exp.title} - ₹{exp.amount}</span>
+            <span>
+              {new Date(exp.createdAt).toLocaleString("en-US", {
+                year: "numeric",
+                month: "short",
+                day: "2-digit",
+                hour: "2-digit",
+                minute: "2-digit",
+                second: "2-digit",
+                hour12: true,
+              })}
+            </span>
             <div>
               <button
                 onClick={() => {
@@ -176,14 +189,14 @@ const SanchayAgent = () => {
               onChange={(e) => setEditExpense({ ...editExpense, amount: e.target.value })}
               className="w-full p-2 rounded bg-gray-700 border border-gray-600 text-white mb-2"
             />
-            <button 
-              onClick={updateExpense} 
+            <button
+              onClick={updateExpense}
               className="bg-blue-600 px-4 py-2 rounded"
             >
               Save
             </button>
-            <button 
-              onClick={() => setIsEditModalOpen(false)} 
+            <button
+              onClick={() => setIsEditModalOpen(false)}
               className="ml-2 bg-red-600 px-4 py-2 rounded"
             >
               Cancel
@@ -194,13 +207,20 @@ const SanchayAgent = () => {
 
       {isSummaryModalOpen && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-96 text-white">
-            <h2 className="text-xl font-bold mb-2">Expense Summary</h2>
-            <p>{summary}</p>
-            <button onClick={() => setIsSummaryModalOpen(false)} className="mt-4 bg-red-600 px-4 py-2 rounded">Close</button>
+          <div className="bg-gray-800 p-6 rounded-lg shadow-lg w-4/5 h-4/5 text-white overflow-y-auto">
+            <h2 className="text-2xl font-bold mb-4">Expense Summary</h2>
+            <ExpensePieChart expenses={expenses} />
+            <p className="whitespace-pre-wrap mt-4">{summary}</p>
+            <button
+              onClick={() => setIsSummaryModalOpen(false)}
+              className="mt-4 bg-red-600 px-4 py-2 rounded"
+            >
+              Close
+            </button>
           </div>
         </div>
       )}
+
     </div>
   );
 };

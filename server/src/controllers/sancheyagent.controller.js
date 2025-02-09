@@ -94,30 +94,17 @@ const summarizeExpenses = AsyncHandler(async (req, res) => {
     const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
     const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash" });
 
-    const formattedExpenses = expenses.map(exp => ({
-        category: exp.category || "Uncategorized",
-        amount: exp.amount,
-        date: exp.date ? new Date(exp.date).toDateString() : "Unknown Date"
-    }));
+    const formattedExpenses = expenses.map(exp => 
+        `- ${exp.title}: ₹${exp.amount} on ${exp.date ? new Date(exp.date).toDateString() : "Unknown Date"}`
+    ).join("\n");
 
     const prompt = `
-  **Smart Expense Analysis & Investment Guidance (₹ - Indian Rupees)**  
-
-  Analyze the following expenses and provide insights on spending habits:  
-  ${JSON.stringify(formattedExpenses, null, 2)}
-
-  **Your Task:**  
-  1. Categorize the expenses and identify areas of high or unnecessary spending.  
-  2. Detect spending patterns, such as frequent purchases or high-cost habits.  
-  3. Offer personalized suggestions to optimize spending and cut down on avoidable expenses.  
-  4. Motivate the user to redirect savings into productive investments or financial goals.  
-  5. Suggest beginner-friendly investment options in India (e.g., Mutual Funds, SIPs, Fixed Deposits, PPF, etc.).  
-
-  **Tone:** Encouraging, insightful, and action-driven.  
-  **Response Limit:** Keep it within 200 words for quick understanding.  
-  **Final Goal:** Help the user make smarter financial decisions, reduce unnecessary expenses, and grow their wealth effectively in India!  
-`;
-
+    Here is a list of the user's recent expenses:\n
+    ${formattedExpenses}\n
+    Analyze the spending patterns and provide insights on how the user can optimize their expenses and save more money.
+    Provide specific suggestions and categorize spending trends if possible.
+    give the result in bullet points and in a concise manner.
+    `;
 
     try {
         const chatSession = model.startChat();
@@ -134,6 +121,7 @@ const summarizeExpenses = AsyncHandler(async (req, res) => {
         throw new ApiError(500, "Error generating response");
     }
 });
+
 
 export {
     updateGoal,
