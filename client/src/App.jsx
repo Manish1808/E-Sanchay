@@ -15,6 +15,7 @@ import Sandehbot from './pages/sandehbot.jsx';
 import Smartinvest from './pages/smartinvest.jsx';
 import Assessment from './pages/assessment.jsx';
 import Financialbacker from "./pages/financialbacker.jsx";
+import Rewards from './pages/rewards.jsx';
 
 const AppLayout = () => (
   <>
@@ -67,6 +68,10 @@ const router = createBrowserRouter([
         path: "/financialbacker",
         element: <Financialbacker />,
       },
+      {
+        path:"/rewards",
+        element: <Rewards />
+      }
     ],
   },
 ]);

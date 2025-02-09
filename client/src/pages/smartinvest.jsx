@@ -1,7 +1,9 @@
-import React, { useState } from "react";
+import React, { useState,useContext } from "react";
+import {AuthContext} from "../contexts/AuthContext.jsx";
 
 const SmartInvest = () => {
-  const [income, setIncome] = useState("");
+  const {user} = useContext(AuthContext)
+  const [income, setIncome] = useState(user.income);
   const [riskLevel, setRiskLevel] = useState("moderate");
   const [language, setLanguage] = useState("english");
   const [breakdown, setBreakdown] = useState(null);
