@@ -6,14 +6,14 @@ const rewards = [
   { id: 1, title: "Amazon Gift Card", pointsRequired: 50000, image: "/amazon.webp" },
   { id: 2, title: "Shopping Voucher", pointsRequired: 5000, image: "/shop.jpg" },
   { id: 3, title: "Travel Bag", pointsRequired: 7000, image: "/travelbag.jpg" },
-  { id: 4, title: "Water Bottle", pointsRequired: 3000, image: "/bottle.webp" },
+  { id: 4, title: "Water Bottle", pointsRequired: 40, image: "/bottle.webp" },
   { id: 5, title: "Mobile Recharge", pointsRequired: 5000, image: "/recharge.jpg" },
   { id: 6, title: "Movie Coupons", pointsRequired: 6000, image: "/movie.jpg" },
 ];
 
 const RewardsGrid = () => {
-  const { luser } = useContext(AuthContext);
-  const userPoints = luser?.points || 0;
+  const { user } = useContext(AuthContext);
+  const userPoints = user?.points || 0;
 
   const handleRedeem = (requiredPoints) => {
     if (userPoints >= requiredPoints) {

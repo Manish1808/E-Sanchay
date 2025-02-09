@@ -9,6 +9,7 @@ const SandehBot = () => {
   const [loading, setLoading] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState("english");
   const [listening, setListening] = useState(false);
+  const [status, setstatus] = useState("");
 
   const handleLanguageChange = (e) => {
     const newLanguage = e.target.value;
@@ -32,6 +33,7 @@ const SandehBot = () => {
     setMessages((prev) => [...prev, userMessage]);
     setInput("");
     setLoading(true);
+    setstatus("Typing.......")
 
     try {
       const response = await axios.post("http://localhost:8000/api/v1/chat/sandeh", {
@@ -46,6 +48,7 @@ const SandehBot = () => {
       setMessages((prev) => [...prev, { text: "Sorry, something went wrong. 😞", sender: "bot" }]);
     } finally {
       setLoading(false);
+      setstatus("");
     }
   };
 
@@ -64,7 +67,7 @@ const SandehBot = () => {
     recognition.onstart = () => setListening(true);
     recognition.onend = () => setListening(false);
     recognition.onerror = (event) => console.error("Speech recognition error:", event.error);
-    
+
     recognition.onresult = (event) => {
       const transcript = event.results[0][0].transcript;
       setInput(transcript);
@@ -72,6 +75,50 @@ const SandehBot = () => {
 
     recognition.start();
   };
+
+  const loadVoices = () => {
+    return new Promise((resolve) => {
+      let voices = speechSynthesis.getVoices();
+      if (voices.length > 0) {
+        resolve(voices);
+        return;
+      }
+      speechSynthesis.onvoiceschanged = () => {
+        voices = speechSynthesis.getVoices();
+        resolve(voices);
+      };
+    });
+  };
+
+  const handleTextToSpeech = (text) => {
+    setLoading(true);
+    setstatus("Speaking.....");
+  
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = selectedLanguage === "hindi" ? "hi-IN" 
+                   : selectedLanguage === "telugu" ? "te-IN" 
+                   : "en-US";
+  
+    // Only fetch a Telugu voice explicitly
+    if (selectedLanguage === "telugu") {
+      const voices = speechSynthesis.getVoices();
+      const teluguVoice = voices.find(voice => voice.lang === "te-IN");
+      if (teluguVoice) {
+        utterance.voice = teluguVoice;
+      } else {
+        console.warn("Telugu voice not found. Using default.");
+      }
+    }
+  
+    utterance.onend = () => {
+      setLoading(false);
+      setstatus("");
+    };
+  
+    speechSynthesis.speak(utterance);
+  };
+  
+
 
   return (
     <div className="flex items-center justify-center h-screen bg-black-900 p-5">
@@ -92,11 +139,16 @@ const SandehBot = () => {
 
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
             {messages.map((msg, index) => (
-              <div key={index} className={`max-w-[75%] px-4 py-3 rounded-lg text-base ${msg.sender === "user" ? "bg-blue-500 text-white self-end ml-auto" : "bg-gray-600 text-gray-200 self-start"}`}>
-                {msg.text}
+              <div key={index} className={`max-w-[75%] px-4 py-3 rounded-lg text-base flex items-center ${msg.sender === "user" ? "bg-blue-500 text-white self-end ml-auto" : "bg-gray-600 text-gray-200 self-start"}`}>
+                <span>{msg.text}</span>
+                {msg.sender === "bot" && (
+                  <button onClick={() => handleTextToSpeech(msg.text)} className="ml-2 text-yellow-400">
+                    🔊
+                  </button>
+                )}
               </div>
             ))}
-            {loading && <div className="text-gray-400 text-sm">Typing...</div>}
+            {status && <div className="text-gray-400 text-sm">{status}</div>}
           </div>
 
           <div className="p-4 border-t border-gray-700 flex items-center bg-gray-700">

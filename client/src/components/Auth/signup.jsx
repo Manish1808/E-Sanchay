@@ -1,19 +1,19 @@
-import React, { useState, useContext } from 'react';
+import React, { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
-import axios from 'axios';
-import { toast } from 'react-toastify';
-import { AuthContext } from '../../contexts/AuthContext.jsx';
+import axios from "axios";
+import { toast } from "react-toastify";
+import { AuthContext } from "../../contexts/AuthContext.jsx";
 
 const Signup = () => {
   const navigate = useNavigate();
   const { setUser } = useContext(AuthContext);
   const [userData, setUserData] = useState({
-    fullname: '',
-    mobile: '',
-    password: '',
-    confirmPassword: '',
-    occupation: '',
-    income: '',
+    fullname: "",
+    mobile: "+91",
+    password: "",
+    confirmPassword: "",
+    occupation: "",
+    income: "",
   });
   const [isLoading, setIsLoading] = useState(false);
 
@@ -21,8 +21,31 @@ const Signup = () => {
     const { name, value } = e.target;
     setUserData((prevUserData) => ({
       ...prevUserData,
-      [name]: value
+      [name]: value,
     }));
+  };
+
+  // Function to validate mobile number using Numerify API
+  const validateMobileNumber = async (mobile) => {
+    try {
+      const options = {
+        method: "GET",
+        url: `https://apilayer.net/api/validate?access_key=d59aecd7a9dc082dc4902807f4c39258`,
+        params: { number: mobile },
+      };
+      const response = await axios.request(options);
+      console.log(response.data);
+      if (response.data.valid && response.data.country_code === "IN") {
+        return true;
+      } else {
+        toast.error("Invalid Indian mobile number");
+        return false;
+      }
+    } catch (error) {
+      console.log(error);
+      toast.error("Error validating mobile number");
+      return false;
+    }
   };
 
   const handleSignup = async (e) => {
@@ -35,13 +58,23 @@ const Signup = () => {
       return;
     }
 
+    // Validate mobile number before proceeding
+    const isMobileValid = await validateMobileNumber(userData.mobile);
+    if (!isMobileValid) {
+      setIsLoading(false);
+      return;
+    }
+
     try {
-      const response = await axios.post(`http://localhost:8000/api/v1/auth/register`, userData);
+      const response = await axios.post(
+        `http://localhost:8000/api/v1/auth/register`,
+        userData
+      );
       const user = response.data.data;
       localStorage.setItem("user", JSON.stringify(user));
       setUser(user);
       toast.success("Signup Successful");
-      navigate('/');
+      navigate("/");
     } catch (error) {
       toast.error("Invalid Credentials. Try Again");
     } finally {
@@ -52,10 +85,17 @@ const Signup = () => {
   return (
     <div className="flex items-center justify-center min-h-screen">
       <div className="w-full max-w-sm bg-white shadow-md rounded-lg px-8 pt-6 pb-8">
-        <h2 className="text-2xl font-bold text-center text-gray-700 mb-6">Sign Up</h2>
+        <h2 className="text-2xl font-bold text-center text-gray-700 mb-6">
+          Sign Up
+        </h2>
         <form onSubmit={handleSignup}>
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="fullName">Full Name</label>
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="fullname"
+            >
+              Full Name
+            </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="fullname"
@@ -68,7 +108,12 @@ const Signup = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="mobile">Mobile Number</label>
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="mobile"
+            >
+              Mobile Number
+            </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="mobile"
@@ -81,7 +126,12 @@ const Signup = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="password">Password</label>
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="password"
+            >
+              Password
+            </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="password"
@@ -94,7 +144,12 @@ const Signup = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="confirmPassword">Confirm Password</label>
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="confirmPassword"
+            >
+              Confirm Password
+            </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="confirmPassword"
@@ -107,7 +162,12 @@ const Signup = () => {
           </div>
 
           <div className="mb-4">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="occupation">Occupation</label>
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="occupation"
+            >
+              Occupation
+            </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="occupation"
@@ -120,7 +180,12 @@ const Signup = () => {
           </div>
 
           <div className="mb-6">
-            <label className="block text-gray-700 text-sm font-bold mb-2" htmlFor="income">Income</label>
+            <label
+              className="block text-gray-700 text-sm font-bold mb-2"
+              htmlFor="income"
+            >
+              Income
+            </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
               id="income"
@@ -144,7 +209,10 @@ const Signup = () => {
 
         <p className="text-center text-gray-600 text-sm mt-4">
           Already have an account?{" "}
-          <Link to="/login" className="text-blue-500 hover:text-blue-700 font-bold">
+          <Link
+            to="/login"
+            className="text-blue-500 hover:text-blue-700 font-bold"
+          >
             Login
           </Link>
         </p>
