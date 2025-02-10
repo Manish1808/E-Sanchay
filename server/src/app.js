@@ -34,5 +34,4 @@ app.use("/api/v1/smartinvest",investroute);
 
 
 
-
 export {app}
