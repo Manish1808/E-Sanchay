@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import axios from "axios";
+import ReactMarkdown from "react-markdown";
 
 const SandehBot = () => {
   const [messages, setMessages] = useState([
@@ -93,12 +94,12 @@ const SandehBot = () => {
   const handleTextToSpeech = (text) => {
     setLoading(true);
     setstatus("Speaking.....");
-  
+
     const utterance = new SpeechSynthesisUtterance(text);
-    utterance.lang = selectedLanguage === "hindi" ? "hi-IN" 
-                   : selectedLanguage === "telugu" ? "te-IN" 
-                   : "en-US";
-  
+    utterance.lang = selectedLanguage === "hindi" ? "hi-IN"
+      : selectedLanguage === "telugu" ? "te-IN"
+        : "en-US";
+
     // Only fetch a Telugu voice explicitly
     if (selectedLanguage === "telugu") {
       const voices = speechSynthesis.getVoices();
@@ -109,15 +110,15 @@ const SandehBot = () => {
         console.warn("Telugu voice not found. Using default.");
       }
     }
-  
+
     utterance.onend = () => {
       setLoading(false);
       setstatus("");
     };
-  
+
     speechSynthesis.speak(utterance);
   };
-  
+
 
 
   return (
@@ -140,7 +141,7 @@ const SandehBot = () => {
           <div className="flex-1 overflow-y-auto p-4 space-y-3">
             {messages.map((msg, index) => (
               <div key={index} className={`max-w-[75%] px-4 py-3 rounded-lg text-base flex items-center ${msg.sender === "user" ? "bg-blue-500 text-white self-end ml-auto" : "bg-gray-600 text-gray-200 self-start"}`}>
-                <span>{msg.text}</span>
+                <span><ReactMarkdown>{msg.text}</ReactMarkdown></span>
                 {msg.sender === "bot" && (
                   <button onClick={() => handleTextToSpeech(msg.text)} className="ml-2 text-yellow-400">
                     🔊
