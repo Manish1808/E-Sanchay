@@ -79,7 +79,14 @@ function App() {
   return (
     <AuthProvider>
       <RouterProvider router={router} />
-      <ToastContainer />
+      <ToastContainer 
+        position="bottom-right" // Change position
+        autoClose={2000} // Set duration (in milliseconds)
+        hideProgressBar={false} // Show/hide progress bar
+        newestOnTop={true} // Show newest toast on top
+        closeOnClick // Close on click
+        pauseOnHover // Pause on hover
+      />
     </AuthProvider>
   );
 }

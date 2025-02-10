@@ -1,9 +1,10 @@
 import React, { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import {toast} from "react-toastify";
 import { AuthContext } from "../contexts/AuthContext.jsx";
 import { Bot, Edit, Trash } from "lucide-react";
 import ExpensePieChart from "./expensepiechart.jsx";
-import ReactMarkdown from "react-markdown"; 
+import ReactMarkdown from "react-markdown";
 const SanchayAgent = () => {
   const { user } = useContext(AuthContext);
   const [expenses, setExpenses] = useState([]);
@@ -11,6 +12,7 @@ const SanchayAgent = () => {
   const [amount, setAmount] = useState("");
   const [loading, setLoading] = useState(false);
   const [sloading, setsLoading] = useState(false);
+  const [dloading, setdLoading] = useState(false);
   const [message, setMessage] = useState("");
   const [summary, setSummary] = useState("");
   const [isSummaryModalOpen, setIsSummaryModalOpen] = useState(false);
@@ -80,15 +82,17 @@ const SanchayAgent = () => {
   };
 
   const deleteExpense = async (id) => {
-    setLoading(true);
+    setdLoading(true);
     try {
       await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/v1/sancheyagent/expenses/${id}`);
       setExpenses(expenses.filter((exp) => exp._id !== id));
       setMessage("Expense deleted successfully!");
+      toast.success("Expense deleted successfully!");
     } catch (error) {
+      toast.error("Error deleting expense.");
       setMessage("Error deleting expense.");
     }
-    setLoading(false);
+    setdLoading(false);
   };
 
   const summarizeExpenses = async () => {
@@ -130,7 +134,7 @@ const SanchayAgent = () => {
         />
         <button
           onClick={addOrUpdateExpense}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded hover:cursor-pointer"
           disabled={loading}
         >
           {loading ? (editingExpense ? "Updating..." : "Adding...") : editingExpense ? "Update Expense" : "Add Expense"}
@@ -141,7 +145,7 @@ const SanchayAgent = () => {
           <button
             onClick={summarizeExpenses}
             disabled={sloading}
-            className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded flex items-center w-full"
+            className="bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded flex items-center w-full hover:cursor-pointer"
           >
             <Bot className="mr-2" size={20} /> {sloading ? "Summarizing..." : "Summarize Expenses"}
           </button>
@@ -151,39 +155,50 @@ const SanchayAgent = () => {
       {/* Right Section (80%) - Grid Layout */}
       <div className="w-4/5 p-5">
         <h2 className="text-2xl font-bold mb-4">Expense List</h2>
-        <div className="grid grid-cols-4 gap-3">
-          {expenses.map((exp) => (
-            <div key={exp._id} className="bg-gray-700 p-4 rounded-lg shadow-lg">
-              <h3 className="text-lg font-bold">{exp.title}</h3>
-              <p className="text-gray-300">₹{exp.amount}</p>
-              <p className="text-sm text-gray-400">
-                {new Date(exp.createdAt).toLocaleString("en-US", {
-                  year: "numeric",
-                  month: "short",
-                  day: "2-digit",
-                  hour: "2-digit",
-                  minute: "2-digit",
-                  second: "2-digit",
-                  hour12: true,
-                })}
-              </p>
-              <div className="flex gap-2 mt-3">
-                <button
-                  onClick={() => editExpense(exp)}
-                  className="bg-yellow-500 px-3 py-1 rounded flex items-center"
-                >
-                  <Edit size={16} className="mr-1" /> Edit
-                </button>
-                <button
-                  onClick={() => deleteExpense(exp._id)}
-                  className="bg-red-500 px-3 py-1 rounded flex items-center"
-                >
-                  <Trash size={16} className="mr-1" /> Delete
-                </button>
+
+        {expenses.length === 0 ? (
+          <p className="text-gray-400 text-center text-lg">No Expenses Found</p>
+        ) : (
+          <div className="grid grid-cols-4 gap-3">
+            {expenses.map((exp) => (
+              <div key={exp._id} className="bg-gray-700 p-4 rounded-lg shadow-lg">
+                <h3 className="text-lg font-bold">{exp.title}</h3>
+                <p className="text-gray-300">₹{exp.amount}</p>
+                <p className="text-sm text-gray-400">
+                  {new Date(exp.createdAt).toLocaleString("en-US", {
+                    year: "numeric",
+                    month: "short",
+                    day: "2-digit",
+                    hour: "2-digit",
+                    minute: "2-digit",
+                    second: "2-digit",
+                    hour12: true,
+                  })}
+                </p>
+                <div className="flex gap-2 mt-3">
+                  <button
+                    onClick={() => editExpense(exp)}
+                    className="bg-yellow-500 px-3 py-1 rounded flex items-center hover:cursor-pointer"
+                  >
+                    <Edit size={16} className="mr-1" /> Edit
+                  </button>
+                  <button
+                    onClick={() => deleteExpense(exp._id)}
+                    className="bg-red-500 px-3 py-1 rounded flex items-center hover:cursor-pointer"
+                    disabled={dloading} 
+                  >
+                    {dloading ? "Deleting..." : (
+                      <>
+                        <Trash size={16} className="mr-1" /> Delete
+                      </>
+                    )}
+                  </button>
+
+                </div>
               </div>
-            </div>
-          ))}
-        </div>
+            ))}
+          </div>
+        )}
       </div>
 
       {/* Summary Modal */}
@@ -195,7 +210,7 @@ const SanchayAgent = () => {
             <ReactMarkdown className="whitespace-pre-wrap mt-4">{summary}</ReactMarkdown>
             <button
               onClick={() => setIsSummaryModalOpen(false)}
-              className="mt-4 bg-red-600 px-4 py-2 rounded"
+              className="mt-4 bg-red-600 px-4 py-2 rounded hover:cursor-pointer"
             >
               Close
             </button>

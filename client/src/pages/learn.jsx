@@ -19,6 +19,11 @@ const Learn = () => {
       { title: "చాణక్య నీతులు", video: "https://drive.google.com/file/d/1tz1n_606lx5QZ2TgWUqVXim0q8HqpIOh/preview" },
       { title: "పొదుపు విలువ", video: "https://drive.google.com/file/d/1sFkY9lohYrJTqKT0-3bMQ6LVoIZ63OCM/preview" },
     ],
+    english: [
+      { title: "The Inspiring Journey of Jack Ma", video: "https://drive.google.com/file/d/1Jq190_q2lIxIRMLuvtjvQrd5O1_OfNEa/preview" },
+      { title: "The Rise of BlackRock", video: "https://drive.google.com/file/d/1_2F02aR5KsXfG2z0fMAyfCsesDoR3FNr/preview" },
+      { title: "How Savings Impact Your Financial Future", video: "https://drive.google.com/file/d/12kw53lrZrqyUyQL5dV0oMvX6GvXuIun_/preview" },
+    ]
   };
 
   useEffect(() => {
@@ -47,11 +52,12 @@ const Learn = () => {
         <div className="flex justify-between items-center mb-3">
           <h2 className="text-lg font-bold text-gray-100">Chapters</h2>
           <select
-            className="bg-gray-700 text-white p-1 rounded"
+            className="bg-gray-700 text-white p-1 rounded hover:cursor-pointer"
             value={language}
             onChange={(e) => setLanguage(e.target.value)}
           >
             <option value="hindi">Hindi</option>
+            <option value="english">English</option>
             <option value="telugu">Telugu</option>
           </select>
         </div>
@@ -87,7 +93,7 @@ const Learn = () => {
               onChange={(e) => setNewNote(e.target.value)}
             />
             <button
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded hover:cursor-pointer"
               onClick={addNote}
             >
               Add
