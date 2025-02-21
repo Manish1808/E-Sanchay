@@ -15,7 +15,7 @@ import Smartinvest from './pages/smartinvest.jsx';
 import Assessment from './pages/assessment.jsx';
 import Financialbacker from "./pages/financialbacker.jsx";
 import Rewards from './pages/rewards.jsx';
-
+import Goal from "./pages/goal.jsx";
 const AppLayout = () => (
   <>
     <Navbar />
@@ -70,7 +70,11 @@ const router = createBrowserRouter([
       {
         path:"/rewards",
         element: <Rewards />
-      }
+      },
+      {
+        path:"/goal",
+        element: <Goal />
+      },
     ],
   },
 ]);

@@ -34,6 +34,13 @@ const Home = () => {
           </div>
         </Link>
 
+        <Link to="/goal" className="max-w-sm rounded-lg overflow-hidden shadow-lg bg-blue-100 hover:bg-blue-200 transition duration-300 mr-4">
+          <img className="h-60 w-full object-fill" src="/goal.jpg" alt="Goal" />
+          <div className="px-6 py-4">
+            <div className="font-bold text-xl mb-2 text-gray-900">Goal Tracker</div>
+          </div>
+        </Link>
+
         <Link to="/assessment" className="max-w-sm rounded-lg overflow-hidden shadow-lg bg-blue-100 hover:bg-blue-200 transition duration-300 mr-4">
           <img className="h-60 w-full object-fill" src="/assessment.webp" alt="Assessment" />
           <div className="px-6 py-4">
