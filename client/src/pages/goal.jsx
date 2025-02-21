@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from "react";
-import { format } from "date-fns";
+import { format, set } from "date-fns";
 import Confetti from "react-confetti";
 import { toast } from "react-toastify";
 import axios from "axios";
@@ -24,7 +24,7 @@ const GoalTracker = () => {
   const [showConfetti, setShowConfetti] = useState(false);
   const [newCollectedMoney, setNewCollectedMoney] = useState({});
   const [motivationalMessage, setMotivationalMessage] = useState("");
-
+  const [loading, setLoading] = useState(false);
   // **Fetch Goals on Component Mount**
   useEffect(() => {
     if (user?._id) {
@@ -33,11 +33,15 @@ const GoalTracker = () => {
   }, [user]);
 
   const fetchGoals = async () => {
+    setLoading(true);
     try {
       const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/goal/getgoals`, { userid: user._id });
       setGoals(response.data.data);
+      setLoading(false);
     } catch (error) {
       toast.error(error.response?.data?.message || "Error fetching goals");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -51,6 +55,7 @@ const GoalTracker = () => {
       toast.error("Please fill in all fields");
       return;
     }
+    setLoading(true);
     try {
       const response = await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/v1/goal/creategoal`, {
         ...goalData,
@@ -61,11 +66,14 @@ const GoalTracker = () => {
       toast.success("Goal added successfully!");
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to add goal");
+    } finally {
+      setLoading(false);
     }
   };
 
   // **Update Collected Money**
   const updateCollectedMoney = async (id, collectedAmount) => {
+    setLoading(true);
     try {
       const goalToUpdate = goals.find(goal => goal._id === id); // Get the specific goal by ID
 
@@ -93,22 +101,37 @@ const GoalTracker = () => {
       toast.success("Goal updated successfully!");
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to update goal");
+    } finally {
+      setLoading(false);
     }
   };
 
   // **Delete Goal**
   const deleteGoal = async (id) => {
+    setLoading(true);
     try {
       await axios.delete(`${import.meta.env.VITE_BACKEND_URL}/api/v1/goal/deletegoal/${id}`);
       setGoals(goals.filter(goal => goal._id !== id));
       toast.success("Goal deleted successfully!");
     } catch (error) {
       toast.error(error.response?.data?.message || "Failed to delete goal");
+    } finally { 
+      setLoading(false);
     }
   };
 
   return (
     <div className="p-10 bg-gray-900 text-white min-h-screen relative flex gap-10">
+      {loading && (
+        <div className="loader-overlay">
+          <div className="loader">
+            <div className="circle"></div>
+            <div className="circle"></div>
+            <div className="circle"></div>
+            <div className="circle"></div>
+          </div>
+        </div>
+      )}
       {showConfetti && <Confetti numberOfPieces={300} gravity={0.2} />}
       <div className="w-1/3 flex justify-center">
         <div className="p-6 bg-gray-800 w-full max-w-sm rounded-lg shadow-lg">
