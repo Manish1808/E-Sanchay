@@ -140,7 +140,8 @@ const GoalTracker = () => {
           const daysLeft = Math.max(0, Math.floor((targetDate - today) / (1000 * 60 * 60 * 24)));
 
           const dailySavings = daysLeft > 0 ? (remainingAmount / daysLeft).toFixed(2) : 0;
-          const monthlySavings = (dailySavings * 30).toFixed(2);
+          const monthlySavings = daysLeft > 0 ? (remainingAmount / Math.ceil(daysLeft / 30)).toFixed(2) : 0;
+
 
           return (
             <div
