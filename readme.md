@@ -20,3 +20,10 @@ Financial illiteracy is a major barrier to economic stability. Many struggle wit
 - **Goal Tracker** - Provides methods to make users track and complete their financial goals.
 
 E-Sanchay empowers users with financial knowledge, helping them build long-term stability and independence.
+
+## Project SnapShot
+![alt text](<Screenshot (7).png>)
+
+#### Project is Live at : https://e-sanchay.vercel.app/
+
+## E-Sanchay Video Demo
