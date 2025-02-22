@@ -24,10 +24,9 @@ E-Sanchay empowers users with financial knowledge, helping them build long-term 
 ## Project SnapShot
 ![alt text](<Screenshot (7).png>)
 
-#### Project is Live at : https://e-sanchay.vercel.app/
-testing : 
+#### Project is Live at : https://e-sanchay.vercel.app/ 
 mobile : +918309340250
-passwoord : 123456
+password : 123456
 You can use in login page to test the application
 
 ## E-Sanchay Video Demo
