@@ -27,3 +27,5 @@ E-Sanchay empowers users with financial knowledge, helping them build long-term 
 #### Project is Live at : https://e-sanchay.vercel.app/
 
 ## E-Sanchay Video Demo
+
+[Video Demonstartion](https://youtu.be/CubHoNJhE9Y)
