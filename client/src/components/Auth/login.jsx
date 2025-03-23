@@ -7,7 +7,7 @@ const Login = () => {
   const navigate = useNavigate();
   const { setUser } = useContext(AuthContext);
   const [userData, setUserData] = useState({
-    mobile: '91',
+    mobile: '',
     password: ''
   });
   const [isLoading, setIsLoading] = useState(false);

@@ -9,7 +9,7 @@ const Signup = () => {
   const { setUser } = useContext(AuthContext);
   const [userData, setUserData] = useState({
     fullname: "",
-    mobile: "+91",
+    mobile: "",
     password: "",
     confirmPassword: "",
     occupation: "",
@@ -26,26 +26,7 @@ const Signup = () => {
   };
 
   // Function to validate mobile number using Numerify API
-  const validateMobileNumber = async (mobile) => {
-    try {
-      const options = {
-        method: "GET",
-        url: `https://apilayer.net/api/validate?access_key=${import.meta.env.VITE_NUMERIFY_API}`,
-        params: { number: mobile },
-      };
-      const response = await axios.request(options);
-      if (response.data.valid && response.data.country_code === "IN") {
-        return true;
-      } else {
-        toast.error("Invalid Indian mobile number");
-        return false;
-      }
-    } catch (error) {
-      console.log(error);
-      toast.error("Error validating mobile number");
-      return false;
-    }
-  };
+  
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -56,14 +37,6 @@ const Signup = () => {
       setIsLoading(false);
       return;
     }
-
-    // Validate mobile number before proceeding
-    const isMobileValid = await validateMobileNumber(userData.mobile);
-    if (!isMobileValid) {
-      setIsLoading(false);
-      return;
-    }
-
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/v1/auth/register`,
